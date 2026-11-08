@@ -1,0 +1,33 @@
+# Dependencias
+node_modules/
+
+# Compilaciones y binarios de salida (los instaladores se publican en GitHub Releases)
+dist/
+build/temp/
+
+# Subproyectos independientes (gestionados en sus propios repositorios de Git y Render)
+backend/
+bot/
+
+# Archivos sensibles y credenciales privadas (NUNCA subir a repositorios públicos)
+config/drive-credentials.json
+.env
+.env.*
+!.env.example
+
+# Logs y diagnósticos
+*.log
+install-log.txt
+diagnostic-log.txt
+.agent-cache/
+
+# Archivos de sistema operativo y editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Checkpoint Launcher</title>
+  <link rel="icon" type="image/png" href="../build/icon-256.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Capa decorativa de fondo: manchas de color + grid de pixeles. -->
+  <div class="bg-decor"></div>
+
+  <!-- Canvas para las particulas flotantes. -->
+  <canvas id="particles-canvas"></canvas>
+
+  <div id="app">
+    <aside id="sidebar">
+      <div class="sidebar-header">
+        <img class="sidebar-logo" src="../build/icon-256.png" alt="Checkpoint Launcher">
+        <div>
+          <h2 class="sidebar-title">CHECKPOINT LAUNCHER</h2>
+          <p class="sidebar-subtitle">Comunidad</p>
+        </div>
+      </div>
+      <!-- Botón destacado de Eventos de la Comunidad -->
+      <button id="events-btn" class="featured-events-btn" title="Ver eventos de la comunidad">
+        <span class="events-btn-glow"></span>
+        <span class="events-btn-icon">⚡</span>
+        <div class="events-btn-text">
+          <span class="events-btn-title">EVENTOS</span>
+          <span class="events-btn-tag">COMUNIDAD</span>
+        </div>
+      </button>
+
+      <p class="section-label">Instancias</p>
+      <div id="instance-list"></div>
+      <button id="add-instance-btn" class="ghost-btn">+ Añadir instancia</button>
+
+      <div id="account-box">
+        <div class="avatar" id="account-avatar">--</div>
+        <div>
+          <p class="account-name" id="account-name">Sin sesión</p>
+          <p class="account-status" id="account-status">Sin sesión</p>
+        </div>
+      </div>
+      <button id="login-btn" class="ghost-btn">Iniciar sesión con Microsoft</button>
+      <div id="discord-box" class="discord-box">
+        <div class="discord-box-inner">
+          <img id="discord-avatar" class="discord-avatar" src="" alt="" style="display:none;">
+          <div id="discord-avatar-placeholder" class="discord-avatar-placeholder">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.79 19.79 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
+          </div>
+          <div class="discord-box-info">
+            <p id="discord-username" class="discord-username">Discord</p>
+            <p id="discord-tag" class="discord-tag">No vinculado</p>
+          </div>
+        </div>
+        <button id="discord-link-btn" class="discord-link-btn">Vincular Discord</button>
+      </div>
+    </aside>
+
+    <main id="main-panel">
+      <!-- Banner flotante de Evento en Vivo o Próximo -->
+      <div id="live-event-banner" class="live-event-banner hidden">
+        <div class="live-event-content">
+          <span class="live-event-pulse"></span>
+          <div class="live-event-details">
+            <div class="live-event-tag-row">
+              <span class="live-event-tag" id="live-event-tag">● EN VIVO</span>
+              <span class="live-event-title" id="live-event-title">Torneo PvP</span>
+            </div>
+            <span class="live-event-subtitle" id="live-event-subtitle">¡Comienza en breve! Prepárate para entrar.</span>
+          </div>
+        </div>
+        <div class="live-event-actions">
+          <button id="live-event-action-btn" class="live-event-btn">🎮 Entrar al evento</button>
+          <button id="live-event-dismiss-btn" class="ghost-btn live-dismiss-btn" title="Ocultar aviso">✕</button>
+        </div>
+      </div>
+
+      <!-- Vista de Eventos de la Comunidad (reemplaza el cuadro de instancia al hacer clic en Eventos) -->
+      <div id="events-view" class="events-view hidden">
+        <div class="events-view-header">
+          <div class="events-view-header-info">
+            <h2 class="events-view-title"><span class="neon-bolt">⚡</span> EVENTOS DE LA COMUNIDAD</h2>
+            <p class="events-view-subtitle">Eventos organizados desde Discord con <code>/event create</code></p>
+          </div>
+          <button id="events-refresh-btn" class="ghost-btn events-refresh-btn">
+            <span class="refresh-icon">🔄</span> Actualizar
+          </button>
+        </div>
+
+        <div id="events-loading" class="events-status-box hidden">
+          <div class="events-spinner"></div>
+          <p>Cargando eventos desde el servidor...</p>
+        </div>
+
+        <div id="events-empty" class="events-status-box hidden">
+          <div class="events-empty-icon">🎮</div>
+          <p class="events-empty-title">No hay eventos próximos en este momento</p>
+          <p class="events-empty-desc">Crea un evento en el servidor de Discord usando <code>/event create</code> y aparecerá aquí al instante.</p>
+        </div>
+
+        <div id="events-list" class="events-grid"></div>
+      </div>
+
+      <div id="instance-cover">
+        <div id="instance-cover-info">
+          <p id="instance-title">Selecciona una instancia</p>
+          <p id="instance-code"></p>
+        </div>
+      </div>
+
+      <div id="progress-row" class="hidden">
+        <div class="progress-label">
+          <span id="progress-text">Actualizando modpack…</span>
+          <span id="progress-percent">0%</span>
+        </div>
+        <div class="progress-track">
+          <div id="progress-fill" class="progress-fill"></div>
+        </div>
+      </div>
+
+      <div id="action-row">
+        <button id="play-btn" class="primary-btn" disabled>Jugar</button>
+        <button id="modrinth-open-btn" class="icon-btn" title="Buscar mods">📦</button>
+        <button id="mods-list-btn" class="icon-btn" title="Mods instalados">🧩</button>
+        <button id="logs-open-btn" class="icon-btn" title="Logs y crashes">📋</button>
+        <button id="community-open-btn" class="icon-btn" title="Comunidad">🌐</button>
+        <button id="settings-btn" class="icon-btn">⚙</button>
+      </div>
+    </main>
+  </div>
+
+  <!-- Menu contextual para click derecho en una instancia -->
+  <div id="context-menu" class="context-menu hidden">
+    <button data-action="rename">Renombrar</button>
+    <button data-action="settings">Configuración</button>
+    <button data-action="openRoot">Abrir carpeta .minecraft</button>
+    <button data-action="openMods">Abrir carpeta de mods</button>
+    <button data-action="openLogs">Abrir logs</button>
+    <button data-action="openSaves">Abrir mundos guardados</button>
+    <hr />
+    <button data-action="delete" class="danger">Eliminar instancia</button>
+  </div>
+
+  <!-- Modal de confirmacion de eliminar -->
+  <div id="confirm-modal" class="modal hidden">
+    <div class="modal-card">
+      <p class="modal-title" id="confirm-title">¿Eliminar?</p>
+      <p class="modal-subtitle" id="confirm-message"></p>
+      <div class="modal-actions">
+        <button id="confirm-cancel" class="ghost-btn">Cancelar</button>
+        <button id="confirm-ok" class="primary-btn danger-btn">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de rename -->
+  <div id="rename-modal" class="modal hidden">
+    <div class="modal-card">
+      <p class="modal-title">Renombrar instancia</p>
+      <p class="modal-subtitle">Elegí un nuevo nombre</p>
+      <input id="rename-input" type="text" />
+      <div class="modal-actions">
+        <button id="rename-cancel" class="ghost-btn">Cancelar</button>
+        <button id="rename-ok" class="primary-btn">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de settings -->
+  <div id="settings-modal" class="modal hidden">
+    <div class="modal-card wide">
+      <p class="modal-title">Configuración del launcher</p>
+
+      <label class="field-label">Memoria RAM asignada (GB)</label>
+      <input type="range" id="settings-ram" min="2" max="32" step="1" />
+      <p class="hint" id="settings-ram-value">4 GB</p>
+
+      <label class="field-label">Cerrar el launcher al iniciar Minecraft</label>
+      <label class="checkbox-row">
+        <input type="checkbox" id="settings-close-on-launch" />
+        <span>Sí, cerrar cuando el juego abra</span>
+      </label>
+
+      <label class="field-label">Carpeta de datos del launcher</label>
+      <button id="settings-open-data" class="ghost-btn">Abrir carpeta</button>
+
+      <label class="field-label">API key de CurseForge (opcional)</label>
+      <div class="cf-key-row">
+        <input type="password" id="settings-cf-key" placeholder="Conseguila gratis en console.curseforge.com" autocomplete="off" />
+        <button id="settings-cf-change" class="ghost-btn" style="display:none;flex:0 0 auto;padding:8px 12px">Cambiar</button>
+      </div>
+      <p class="hint" id="settings-cf-status">Solo se guarda localmente. Si está vacía, el launcher usa solo Modrinth. <a href="https://console.curseforge.com/" target="_blank" rel="noopener" style="color:var(--accent-pink)">Conseguir key →</a></p>
+      <button id="settings-cf-test" class="ghost-btn" style="margin-top:8px">Probar conexión</button>
+
+      <label class="field-label" style="margin-top:18px; color: var(--accent-pink)">Comunidad</label>
+      <input type="text" id="settings-community-server" placeholder="Server address (ej: play.tuserver.com:25565)" />
+      <p class="hint">Direccion del server de Minecraft de tu comunidad</p>
+
+      <input type="text" id="settings-community-discord" placeholder="Discord invite (ej: https://discord.gg/xxxx)" style="margin-top:8px" />
+
+      <input type="text" id="settings-community-news" placeholder="News feed RSS (ej: https://tusitio.com/feed.xml)" style="margin-top:8px" />
+
+      <input type="text" id="settings-community-website" placeholder="Sitio web (ej: https://tusitio.com)" style="margin-top:8px" />
+      <p class="hint">Estas URLs se muestran en el panel Comunidad del launcher.</p>
+
+      <p id="settings-error" class="error-text hidden"></p>
+      <div class="modal-actions">
+        <button id="settings-cancel" class="ghost-btn">Cerrar</button>
+        <button id="settings-save" class="primary-btn">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast para updates -->
+  <div id="update-toast" class="hidden">
+    <span id="update-toast-text"></span>
+    <button id="update-toast-btn">Reiniciar</button>
+  </div>
+
+  <!-- Modal de configuracion de instancia (per-instance settings) -->
+  <div id="instance-settings-modal" class="modal hidden">
+    <div class="modal-card wide">
+      <p class="modal-title">Configuración de la instancia</p>
+      <p class="modal-subtitle" id="instance-settings-subtitle">Ajustes personalizados solo para esta instancia</p>
+
+      <label class="checkbox-row">
+        <input type="checkbox" id="inst-settings-use-global" checked />
+        <span>Usar configuración global del launcher</span>
+      </label>
+
+      <div id="inst-settings-custom-fields">
+        <label class="field-label">Memoria RAM (GB)</label>
+        <input type="range" id="inst-settings-ram" min="1" max="32" step="1" />
+        <p class="hint" id="inst-settings-ram-value">4 GB <span style="opacity:0.6">(vacío = usar global)</span></p>
+
+        <label class="field-label">Path de Java (opcional)</label>
+        <div class="java-path-row">
+          <select id="inst-settings-java-select">
+            <option value="">Auto (recomendado)</option>
+          </select>
+          <button id="inst-settings-java-refresh" class="icon-btn-small" title="Re-escanear Java del sistema">🔄</button>
+        </div>
+        <input type="text" id="inst-settings-java-path" placeholder="O pegá un path custom a java.exe" />
+        <button id="inst-settings-java-browse" class="ghost-btn java-browse-btn">📁 Buscar java.exe en el explorador</button>
+        <p class="hint" id="inst-settings-java-info">Java auto = el launcher elige el ideal para esta MC version</p>
+
+        <label class="field-label">JVM args extra (opcional)</label>
+        <input type="text" id="inst-settings-jvm-args" placeholder="-XX:+UseG1GC -XX:MaxGCPauseMillis=50" />
+        <p class="hint">Argumentos adicionales que se pasan a Java. Ej: opciones de GC, memoria, debug.</p>
+      </div>
+
+      <p id="inst-settings-error" class="error-text hidden"></p>
+      <div class="modal-actions">
+        <button id="inst-settings-cancel" class="ghost-btn">Cancelar</button>
+        <button id="inst-settings-save" class="primary-btn">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de busqueda en Modrinth -->
+  <div id="modrinth-modal" class="modal hidden">
+    <div class="modal-card wide modrinth-card">
+      <p class="modal-title">Buscar mods</p>
+      <p class="modal-subtitle" id="modrinth-subtitle">Busca mods compatibles con tu instancia</p>
+
+      <div class="source-toggle">
+        <span class="source-option active" data-source="modrinth">Modrinth</span>
+        <span class="source-option" data-source="curseforge">CurseForge</span>
+      </div>
+
+      <div class="modrinth-search-row">
+        <input type="text" id="modrinth-query" placeholder="Ej: jade, jei, sodium..." />
+        <button id="modrinth-search-btn" class="primary-btn modrinth-search-btn">Buscar</button>
+      </div>
+
+      <div class="modrinth-filters">
+        <span class="filter-label">Loader:</span>
+        <div class="filter-chips" id="modrinth-loader-chips">
+          <span class="chip active" data-loader="">Auto</span>
+        </div>
+        <span class="filter-label" style="margin-left:12px">Tipo:</span>
+        <div class="filter-chips" id="modrinth-type-chips">
+          <span class="chip active" data-type="mod">Mods</span>
+          <span class="chip" data-type="modpack">Modpacks</span>
+          <span class="chip" data-type="resourcepack">Resource Packs</span>
+          <span class="chip" data-type="shader">Shaders</span>
+        </div>
+      </div>
+
+      <div id="modrinth-results" class="modrinth-results">
+        <p class="modrinth-empty">Escribí algo y dale a Buscar para empezar.</p>
+      </div>
+
+      <p id="modrinth-error" class="error-text hidden"></p>
+      <div class="modal-actions">
+        <button id="modrinth-close" class="ghost-btn">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de detalle de proyecto (despues de click en una card) -->
+  <div id="modrinth-detail-modal" class="modal hidden">
+    <div class="modal-card wide modrinth-card">
+      <p class="modal-title" id="modrinth-detail-title">Cargando...</p>
+      <p class="modal-subtitle" id="modrinth-detail-author"></p>
+
+      <div class="modrinth-detail-body" id="modrinth-detail-body">
+        <p class="modrinth-empty">Cargando...</p>
+      </div>
+
+      <p id="modrinth-detail-error" class="error-text hidden"></p>
+      <div class="modal-actions">
+        <button id="modrinth-detail-back" class="ghost-btn">← Volver a resultados</button>
+        <button id="modrinth-detail-close" class="ghost-btn">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Comunidad (server status, news, discord) -->
+  <div id="community-modal" class="modal hidden">
+    <div class="modal-card wide community-card">
+      <p class="modal-title">Comunidad Checkpoint Launcher</p>
+      <p class="modal-subtitle" id="community-subtitle">Conectate con la comunidad</p>
+
+      <!-- Server status -->
+      <div class="community-section" id="community-server-section">
+        <div class="community-section-header">
+          <span class="community-section-icon">🎮</span>
+          <span class="community-section-title">Server de Minecraft</span>
+        </div>
+        <div class="community-server-status" id="community-server-status">
+          <p class="modrinth-empty">Configurá la dirección del server en ⚙ Configuración.</p>
+        </div>
+        <div class="community-server-actions" id="community-server-actions" style="display:none">
+          <button id="community-copy-ip" class="ghost-btn">📋 Copiar IP</button>
+          <button id="community-server-refresh" class="ghost-btn">🔄 Refrescar</button>
+        </div>
+      </div>
+
+      <!-- Links -->
+      <div class="community-section" id="community-links-section">
+        <div class="community-section-header">
+          <span class="community-section-icon">🔗</span>
+          <span class="community-section-title">Links</span>
+        </div>
+        <div class="community-links" id="community-links">
+          <p class="modrinth-empty">Configurá Discord y sitio web en ⚙ Configuración.</p>
+        </div>
+      </div>
+
+      <!-- News feed -->
+      <div class="community-section" id="community-news-section">
+        <div class="community-section-header">
+          <span class="community-section-icon">📰</span>
+          <span class="community-section-title">Últimas noticias</span>
+        </div>
+        <div class="community-news" id="community-news">
+          <p class="modrinth-empty">Configurá el feed RSS en ⚙ Configuración.</p>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button id="community-refresh-all" class="ghost-btn">🔄 Refrescar todo</button>
+        <button id="community-close" class="ghost-btn">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de logs y crash reports -->
+  <div id="logs-modal" class="modal hidden">
+    <div class="modal-card wide logs-card">
+      <p class="modal-title">Logs y crash reports</p>
+      <p class="modal-subtitle" id="logs-subtitle">Diagnosticá problemas de la instancia</p>
+
+      <div class="tab-row">
+        <button class="tab-btn active" data-log-tab="logs">Logs</button>
+        <button class="tab-btn" data-log-tab="crashes">Crash reports</button>
+      </div>
+
+      <!-- Tab: logs -->
+      <div id="log-tab-logs" class="tab-panel">
+        <div class="logs-toolbar">
+          <select id="logs-file-select" class="logs-select"></select>
+          <div class="logs-filter-chips">
+            <span class="chip active" data-filter="all">Todos</span>
+            <span class="chip" data-filter="error">Errores</span>
+            <span class="chip" data-filter="warn">Warnings</span>
+            <span class="chip" data-filter="info">Info</span>
+          </div>
+        </div>
+        <div class="logs-search-row">
+          <input type="text" id="logs-search" placeholder="Buscar en el log..." />
+          <label class="logs-auto-refresh">
+            <input type="checkbox" id="logs-auto-refresh" />
+            <span>Auto-refresh</span>
+          </label>
+        </div>
+        <pre id="logs-content" class="logs-content">Cargando...</pre>
+        <p id="logs-meta" class="logs-meta"></p>
+      </div>
+
+      <!-- Tab: crash reports -->
+      <div id="log-tab-crashes" class="tab-panel hidden">
+        <div class="logs-toolbar">
+          <select id="crash-list-select" class="logs-select"></select>
+        </div>
+        <pre id="crash-content" class="logs-content">Seleccioná un crash report arriba</pre>
+      </div>
+
+      <p id="logs-error" class="error-text hidden"></p>
+      <div class="modal-actions">
+        <button id="logs-open-folder" class="ghost-btn">📁 Abrir carpeta</button>
+        <button id="logs-refresh" class="ghost-btn">🔄 Recargar</button>
+        <button id="logs-close" class="ghost-btn">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de mods instalados (Mod manager) -->
+  <div id="mods-list-modal" class="modal hidden">
+    <div class="modal-card wide mods-list-card">
+      <p class="modal-title">Mods instalados</p>
+      <p class="modal-subtitle" id="mods-list-subtitle">Activá/desactivá los mods de la instancia</p>
+
+      <div class="mods-list-toolbar">
+        <input type="text" id="mods-list-search" placeholder="Buscar mod..." />
+        <div class="mods-list-stats" id="mods-list-stats">0 mods</div>
+      </div>
+
+      <div id="mods-list" class="mods-list">
+        <p class="modrinth-empty">Cargando...</p>
+      </div>
+
+      <p id="mods-list-error" class="error-text hidden"></p>
+      <div class="modal-actions">
+        <button id="mods-list-open-folder" class="ghost-btn">📁 Abrir carpeta</button>
+        <button id="mods-list-close" class="ghost-btn">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Onboarding de CurseForge (primera vez que se abre el buscador de mods) -->
+  <div id="cf-onboarding-modal" class="modal hidden">
+    <div class="modal-card wide cf-onboarding-card">
+      <div class="cf-onboarding-icon">🔑</div>
+      <p class="modal-title" style="text-align:center;font-size:22px">Configurar CurseForge</p>
+      <p class="modal-subtitle" style="text-align:center;margin-bottom:18px">
+        Para buscar mods en CurseForge necesitás una API key <strong>gratuita y personal</strong>.
+      </p>
+
+      <div class="cf-onboarding-steps">
+        <p class="cf-step-title">¿Cómo conseguir tu key?</p>
+        <ol class="cf-step-list">
+          <li>Andá a <a href="https://console.curseforge.com/" target="_blank" rel="noopener" style="color:var(--accent-pink)">console.curseforge.com</a> (se abre en una nueva pestaña)</li>
+          <li>Creá una cuenta gratis si no tenés</li>
+          <li>Click en <strong>API Keys</strong> → <strong>Generate New Key</strong></li>
+          <li>Copiala (empieza con <code>$2a$10$</code>)</li>
+          <li>Pegala abajo y dale a <strong>Validar</strong></li>
+        </ol>
+      </div>
+
+      <label class="field-label" style="margin-top:16px">Tu API key de CurseForge</label>
+      <input type="password" id="cf-onboarding-key" placeholder="$2a$10$..." autocomplete="off" />
+      <p class="hint" id="cf-onboarding-hint">🔒 Se guarda <strong>solo en tu PC</strong>, nunca se envía a ningún servidor nuestro.</p>
+
+      <p id="cf-onboarding-error" class="error-text hidden"></p>
+      <div class="modal-actions" style="flex-direction:column;gap:8px">
+        <button id="cf-onboarding-validate" class="primary-btn">Validar y guardar</button>
+        <button id="cf-onboarding-skip" class="ghost-btn">Solo Modrinth por ahora</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast de instalacion de mod -->
+  <div id="modrinth-toast" class="modrinth-toast hidden">
+    <span id="modrinth-toast-text">Instalando...</span>
+    <div class="modrinth-toast-progress">
+      <div class="modrinth-toast-fill" id="modrinth-toast-fill"></div>
+    </div>
+  </div>
+
+  <!-- Modal de participantes del evento -->
+  <div id="event-participants-modal" class="modal hidden">
+    <div class="modal-card wide">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <p class="modal-title" id="event-participants-title" style="margin:0;">👥 Asistentes confirmados</p>
+        <button id="event-participants-close" class="ghost-btn icon-btn" style="padding:4px 8px;font-size:14px;cursor:pointer;">✕</button>
+      </div>
+      <p class="modal-subtitle" id="event-participants-subtitle" style="margin-bottom:12px;">Usuarios registrados para este evento</p>
+      <div id="event-participants-list" class="participants-scroll-list">
+        <p class="hint">Cargando asistentes...</p>
+      </div>
+      <div class="modal-actions" style="margin-top:16px;">
+        <button id="event-participants-ok" class="primary-btn">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de añadir instancia (tabs) -->
+  <div id="add-instance-modal" class="modal hidden">
+    <div class="modal-card">
+      <div class="tab-row">
+        <button class="tab-btn active" data-tab="code">Por código</button>
+        <button class="tab-btn" data-tab="custom">Personalizado</button>
+      </div>
+
+      <div id="tab-code" class="tab-panel">
+        <p class="modal-title">Añadir modpack por código</p>
+        <p class="modal-subtitle">Pega el código de instalación que te dio el admin o el bot</p>
+
+        <div class="code-cf-notice">
+          <div class="code-cf-notice-icon">⚠️</div>
+          <div class="code-cf-notice-body">
+            <span class="code-cf-notice-title">Aviso importante si el evento tiene mods</span>
+            <span class="code-cf-notice-desc">
+              Si incluye mods de <strong>CurseForge</strong>, asegúrate de ingresar tu <strong>API Key</strong> en <button type="button" id="code-notice-settings-btn" class="notice-link-btn">Ajustes ⚙️</button> antes de instalar para que se descarguen automáticamente.
+            </span>
+          </div>
+        </div>
+
+        <input id="code-input" type="text" placeholder="Ej. EVT-ABCD o código de Drive" />
+        <p id="code-error" class="error-text hidden"></p>
+        <div class="modal-actions">
+          <button id="cancel-add-btn" class="ghost-btn">Cancelar</button>
+          <button id="confirm-add-btn" class="primary-btn">Añadir</button>
+        </div>
+      </div>
+
+      <div id="tab-custom" class="tab-panel hidden">
+        <p class="modal-title">Nueva instancia personalizada</p>
+        <p class="modal-subtitle">Elegí la versión y el modloader</p>
+
+        <label class="field-label">Nombre (opcional)</label>
+        <input id="custom-name" type="text" placeholder="Mi instancia" />
+
+        <label class="field-label">Versión de Minecraft</label>
+        <select id="custom-mc-version">
+          <option value="">Cargando versiones...</option>
+        </select>
+
+        <label class="field-label">Modloader</label>
+        <select id="custom-loader">
+          <option value="vanilla">Vanilla</option>
+          <option value="forge">Forge</option>
+          <option value="neoforge">NeoForge</option>
+          <option value="fabric">Fabric</option>
+        </select>
+
+        <label class="field-label" id="custom-loader-version-label">Versión del loader</label>
+        <select id="custom-loader-version" disabled>
+          <option value="">Elegí una MC version primero</option>
+        </select>
+
+        <p id="custom-error" class="error-text hidden"></p>
+        <div class="modal-actions">
+          <button id="cancel-custom-btn" class="ghost-btn">Cancelar</button>
+          <button id="confirm-custom-btn" class="primary-btn">Crear instancia</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="renderer.js"></script>
+
+  <!-- Toast de notificaciones para eventos (ej: IP copiada) -->
+  <div id="events-toast" class="events-toast hidden">
+    <span class="events-toast-icon">📋</span>
+    <span id="events-toast-text">IP copiada al portapapeles</span>
+  </div>
+</body>
+</html>
