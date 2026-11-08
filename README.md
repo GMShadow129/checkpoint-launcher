@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="build/banner.png" alt="Checkpoint Launcher Banner" width="100%">
+</p>
+
 # 🎮 Checkpoint Launcher
 
 [![Versión](https://img.shields.io/badge/version-0.5.1--beta.1-FF2A4E.svg)](https://github.com/GMShadow129/checkpoint-launcher/releases)
