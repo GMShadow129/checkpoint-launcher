@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="build/banner.png" alt="Checkpoint Launcher Banner" width="100%">
+  <img src="build/banner.jpg" alt="Checkpoint Launcher Banner" width="100%">
 </p>
 
 # 🎮 Checkpoint Launcher
