@@ -77,7 +77,7 @@
     },
     "publish": {
       "provider": "github",
-      "owner": "GMShadow2",
+      "owner": "GMShadow129",
       "repo": "checkpoint-launcher",
       "releaseType": "release"
     }

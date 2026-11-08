@@ -1,6 +1,6 @@
 # 🎮 Checkpoint Launcher
 
-[![Versión](https://img.shields.io/badge/version-0.5.1--beta.1-FF2A4E.svg)](https://github.com/GMShadow2/checkpoint-launcher/releases)
+[![Versión](https://img.shields.io/badge/version-0.5.1--beta.1-FF2A4E.svg)](https://github.com/GMShadow129/checkpoint-launcher/releases)
 [![Electron](https://img.shields.io/badge/Electron-31.x-47848F.svg?logo=electron&logoColor=white)](https://electronjs.org/)
 [![Minecraft](https://img.shields.io/badge/Minecraft-1.2.5%20--%201.21.x-4DFF7C.svg?logo=minecraft&logoColor=white)](https://minecraft.net/)
 [![Discord](https://img.shields.io/badge/Discord-Bot%20Integrated-5865F2.svg?logo=discord&logoColor=white)](https://discord.com/)
@@ -35,7 +35,7 @@
 
 ## 📥 Descarga e Instalación
 
-1. Ve a la sección de **[Releases](https://github.com/GMShadow2/checkpoint-launcher/releases)**.
+1. Ve a la sección de **[Releases](https://github.com/GMShadow129/checkpoint-launcher/releases)**.
 2. Descarga el instalador ejecutable más reciente:
    - **`Checkpoint Launcher-Setup-0.5.1-beta.1.exe`**
 3. Ejecuta el instalador y sigue los pasos en pantalla. ¡Listo para jugar!
@@ -53,7 +53,7 @@ Si deseas contribuir o probar el Launcher en modo de desarrollo:
 ### Instalación
 ```bash
 # Clonar el repositorio
-git clone https://github.com/GMShadow2/checkpoint-launcher.git
+git clone https://github.com/GMShadow129/checkpoint-launcher.git
 cd checkpoint-launcher
 
 # Instalar dependencias
@@ -84,7 +84,7 @@ Los instaladores resultantes se generan en la carpeta `dist/`.
 ## 🌐 Ecosistema Checkpoint
 
 El ecosistema de Checkpoint está compuesto por 3 componentes sincronizados:
-- **[Checkpoint Launcher](https://github.com/GMShadow2/checkpoint-launcher)**: Cliente de escritorio para jugadores (Electron).
+- **[Checkpoint Launcher](https://github.com/GMShadow129/checkpoint-launcher)**: Cliente de escritorio para jugadores (Electron).
 - **[Checkpoint Bot](https://github.com/GMShadow2/checkpoint-bot)**: Bot de Discord para creación y gestión de eventos (`/event create`, `/event edit`, `/event cancel`).
 - **[Checkpoint Backend](https://github.com/GMShadow2/checkpoint-backend)**: API REST y base de datos de eventos, participantes y autenticación OAuth.
 
