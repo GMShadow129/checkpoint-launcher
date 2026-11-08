@@ -85,9 +85,14 @@
             <h2 class="events-view-title"><span class="neon-bolt">⚡</span> EVENTOS DE LA COMUNIDAD</h2>
             <p class="events-view-subtitle">Eventos organizados desde Discord con <code>/event create</code></p>
           </div>
-          <button id="events-refresh-btn" class="ghost-btn events-refresh-btn">
-            <span class="refresh-icon">🔄</span> Actualizar
-          </button>
+          <div class="events-view-header-actions" style="display:flex;gap:10px;align-items:center;">
+            <button id="events-invite-bot-btn" class="ghost-btn events-invite-btn" title="Añade el bot oficial a tu servidor de Discord">
+              🤖 Invitar Bot a Discord
+            </button>
+            <button id="events-refresh-btn" class="ghost-btn events-refresh-btn">
+              <span class="refresh-icon">🔄</span> Actualizar
+            </button>
+          </div>
         </div>
 
         <div id="events-loading" class="events-status-box hidden">
@@ -98,7 +103,12 @@
         <div id="events-empty" class="events-status-box hidden">
           <div class="events-empty-icon">🎮</div>
           <p class="events-empty-title">No hay eventos próximos en este momento</p>
-          <p class="events-empty-desc">Crea un evento en el servidor de Discord usando <code>/event create</code> y aparecerá aquí al instante.</p>
+          <p class="events-empty-desc">
+            Crea un evento en tu servidor de Discord usando <code>/event create</code> y aparecerá aquí al instante.<br>
+            <a href="#" id="events-empty-invite-link" style="color:var(--accent-pink);font-weight:600;margin-top:8px;display:inline-block;text-decoration:underline;cursor:pointer;">
+              🤖 ¿No tienes el bot aún? Haz clic aquí para añadirlo a tu Discord
+            </a>
+          </p>
         </div>
 
         <div id="events-list" class="events-grid"></div>

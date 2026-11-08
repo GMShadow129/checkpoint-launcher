@@ -711,3 +711,15 @@ ipcMain.handle('community:copyToClipboard', async (_event, text) => {
   }
 });
 
+ipcMain.handle('shell:openExternal', async (_event, url) => {
+  try {
+    if (url && (url.startsWith('https://') || url.startsWith('http://'))) {
+      await shell.openExternal(url);
+      return { ok: true };
+    }
+    return { ok: false, error: 'URL no permitida' };
+  } catch (err) {
+    return { ok: false, error: err.message || String(err) };
+  }
+});
+

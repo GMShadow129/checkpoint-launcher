@@ -74,6 +74,7 @@ contextBridge.exposeInMainWorld('launcherAPI', {
   communityServerStatus: (address) => ipcRenderer.invoke('community:serverStatus', address),
   communityNewsFeed: (feedUrl, limit) => ipcRenderer.invoke('community:newsFeed', feedUrl, limit),
   communityCopyToClipboard: (text) => ipcRenderer.invoke('community:copyToClipboard', text),
+  openExternal: (url) => ipcRenderer.invoke('shell:openExternal', url),
 
   // Eventos desde el main
   onSyncProgress: (callback) => {

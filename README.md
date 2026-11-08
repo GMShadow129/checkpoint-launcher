@@ -3,9 +3,13 @@
 [![Versión](https://img.shields.io/badge/version-0.5.1--beta.1-FF2A4E.svg)](https://github.com/GMShadow129/checkpoint-launcher/releases)
 [![Electron](https://img.shields.io/badge/Electron-31.x-47848F.svg?logo=electron&logoColor=white)](https://electronjs.org/)
 [![Minecraft](https://img.shields.io/badge/Minecraft-1.2.5%20--%201.21.x-4DFF7C.svg?logo=minecraft&logoColor=white)](https://minecraft.net/)
-[![Discord](https://img.shields.io/badge/Discord-Bot%20Integrated-5865F2.svg?logo=discord&logoColor=white)](https://discord.com/)
+[![Invitar Bot de Discord](https://img.shields.io/badge/Discord-Invitar%20Bot%20Oficial-5865F2.svg?logo=discord&logoColor=white)](https://discord.com/oauth2/authorize?client_id=1557485683898064997&permissions=2147502080&integration_type=0&scope=bot+applications.commands)
 
 **Checkpoint Launcher** es un lanzador de Minecraft moderno, rápido y diseñado para comunidades de jugadores. Incluye autenticación oficial de Microsoft, integración directa con Discord mediante Bot para organizar y sincronizar eventos comunitarios, auto-descarga de mods desde Modrinth y CurseForge, y conexión automática a servidores.
+
+> 🤖 **¿Quieres organizar eventos en tu servidor de Discord?**  
+> 👉 **[Haz clic aquí para añadir el Bot de Checkpoint a tu servidor](https://discord.com/oauth2/authorize?client_id=1557485683898064997&permissions=2147502080&integration_type=0&scope=bot+applications.commands)**  
+> Con el bot añadido, podrás usar `/event create`, `/event edit` y `/event list` para que los eventos aparezcan automáticamente en el Launcher de todos los jugadores.
 
 ---
 
@@ -85,7 +89,8 @@ Los instaladores resultantes se generan en la carpeta `dist/`.
 
 El ecosistema de Checkpoint está compuesto por 3 componentes sincronizados:
 - **[Checkpoint Launcher](https://github.com/GMShadow129/checkpoint-launcher)**: Cliente de escritorio para jugadores (Electron).
-- **[Checkpoint Bot](https://github.com/GMShadow2/checkpoint-bot)**: Bot de Discord para creación y gestión de eventos (`/event create`, `/event edit`, `/event cancel`).
+- **[Checkpoint Bot](https://github.com/GMShadow2/checkpoint-bot)**: Bot de Discord para creación y gestión de eventos (`/event create`, `/event edit`, `/event cancel`).  
+  👉 **[Enlace de Invitación Oficial del Bot](https://discord.com/oauth2/authorize?client_id=1557485683898064997&permissions=2147502080&integration_type=0&scope=bot+applications.commands)**
 - **[Checkpoint Backend](https://github.com/GMShadow2/checkpoint-backend)**: API REST y base de datos de eventos, participantes y autenticación OAuth.
 
 ---

@@ -2224,6 +2224,28 @@ input[type="range"] {
   font-weight: 600;
 }
 
+.events-invite-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  background: rgba(88, 101, 242, 0.15);
+  border: 1px solid rgba(88, 101, 242, 0.4);
+  color: #a5b4fc;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.events-invite-btn:hover {
+  background: rgba(88, 101, 242, 0.35);
+  color: #fff;
+  border-color: #5865F2;
+  transform: translateY(-1px);
+}
+
 /* Status: Loading & Empty */
 .events-status-box {
   flex: 1;

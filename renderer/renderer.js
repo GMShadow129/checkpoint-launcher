@@ -2349,10 +2349,35 @@ if (eventsBtnEl) {
   });
 }
 
+const DISCORD_BOT_INVITE_URL = 'https://discord.com/oauth2/authorize?client_id=1557485683898064997&permissions=2147502080&integration_type=0&scope=bot+applications.commands';
+
 const eventsRefreshBtnEl = document.getElementById('events-refresh-btn');
 if (eventsRefreshBtnEl) {
   eventsRefreshBtnEl.addEventListener('click', () => {
     loadCommunityEvents();
+  });
+}
+
+const eventsInviteBtnEl = document.getElementById('events-invite-bot-btn');
+if (eventsInviteBtnEl) {
+  eventsInviteBtnEl.addEventListener('click', () => {
+    if (window.launcherAPI && window.launcherAPI.openExternal) {
+      window.launcherAPI.openExternal(DISCORD_BOT_INVITE_URL);
+    } else {
+      window.open(DISCORD_BOT_INVITE_URL, '_blank');
+    }
+  });
+}
+
+const eventsEmptyInviteLinkEl = document.getElementById('events-empty-invite-link');
+if (eventsEmptyInviteLinkEl) {
+  eventsEmptyInviteLinkEl.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (window.launcherAPI && window.launcherAPI.openExternal) {
+      window.launcherAPI.openExternal(DISCORD_BOT_INVITE_URL);
+    } else {
+      window.open(DISCORD_BOT_INVITE_URL, '_blank');
+    }
   });
 }
 
